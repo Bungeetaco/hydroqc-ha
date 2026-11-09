@@ -1,10 +1,24 @@
 """Fixtures for Hydro-Québec integration tests."""
 
+from __future__ import annotations
+
+import sys
 from collections.abc import Generator
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 from zoneinfo import ZoneInfo
+
+# Resolve `hydroqc` imports (tests and the integration use it) to the vendored
+# copy shipped in custom_components/hydroqc/vendor. The integration's package
+# __init__ does the same at runtime in Home Assistant.
+_VENDOR_DIR = (
+    Path(__file__).resolve().parent.parent
+    / "custom_components" / "hydroqc" / "vendor"
+)
+if str(_VENDOR_DIR) not in sys.path:
+    sys.path.insert(0, str(_VENDOR_DIR))
 
 import pytest
 from homeassistant.components.recorder import Recorder

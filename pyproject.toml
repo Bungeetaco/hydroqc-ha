@@ -36,7 +36,10 @@ packages = ["custom_components"]
 
 [dependency-groups]
 dev = [
-    "Hydro-Quebec-API-Wrapper==4.3.1",
+    "python-dateutil>=2.8.0",
+    "pytz>=2024.1",
+    "aiocache>=0.12.0",
+    "pkce>=1.0.3",
     "ruff>=0.15.10",
     "mypy>=1.13.0",
     "pytest>=8.3.0",
@@ -49,6 +52,10 @@ dev = [
 [tool.ruff]
 target-version = "py313"
 line-length = 100
+extend-exclude = [
+    # Third-party code vendored under upstream's own standards.
+    "custom_components/hydroqc/vendor",
+]
 
 [tool.ruff.lint]
 select = [
@@ -81,6 +88,9 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]  # unused imports in __init__.py
 "tests/*" = ["ARG", "PLR2004"]  # allow fixtures and magic values in tests
+# The vendor sys.path shim must run before any import of the vendored wrapper.
+"custom_components/hydroqc/__init__.py" = ["E402"]
+"tests/conftest.py" = ["E402"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["custom_components.hydroqc"]
@@ -100,10 +110,17 @@ show_column_numbers = true
 show_error_context = true
 show_error_codes = true
 ignore_missing_imports = true
+exclude = '(?x)custom_components/hydroqc/vendor/'
 
 [[tool.mypy.overrides]]
 module = "hydroqc.*"
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "custom_components.hydroqc.vendor.hydroqc.*"
+# The vendored wrapper follows the upstream mypy discipline, not this repo's
+# `strict` profile.
+ignore_errors = true
 
 # Note: homeassistant.* types come from HA's own `py.typed` marker
 # This catches API compatibility issues at type-check time

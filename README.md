@@ -153,13 +153,13 @@ Hydro-Québec peut demander un code de vérification envoyé par courriel après
 2. Entrez le code reçu par courriel. Laissez le champ vide pour demander un nouveau code. Si le code est expiré, l'intégration relance la connexion et envoie automatiquement un nouveau code.
 3. Après validation, la session du portail est conservée dans le stockage de Home Assistant (jeton de rafraîchissement et témoins de connexion Azure AD B2C). Au redémarrage, l'intégration tente d'abord une connexion silencieuse. La session obtenue pendant la configuration initiale est réutilisée par l'entrée créée : aucun second code n'est demandé juste après l'ajout.
 
+**Connexion via le client de l'application mobile**
+
+Depuis cette version, l'intégration s'authentifie comme l'application mobile d'Hydro-Québec (client Azure AD B2C mobile, avec le périmètre `offline_access`). Un seul code de vérification par courriel est demandé à la première connexion : la session dure ensuite environ **90 jours** glissants (chaque utilisation la prolonge). Après une mise à jour vers cette version, ou si vous avez fait la première connexion avec une version antérieure, une réauthentification **avec un (seul, le dernier !) code** sera demandée.
+
 **Aucun code demandé en arrière-plan**
 
 Les connexions automatiques (mises à jour planifiées, redémarrages) s'arrêtent à l'étape de vérification : aucun code n'est demandé ni envoyé, et la connexion n'est pas relancée en boucle. Home Assistant affiche **Réauthentification requise** dans **Paramètres** → **Appareils et services**. Cliquez sur **Réauthentifier**, puis saisissez le nouveau code.
-
-**Limite de 24 h**
-
-Le portail Hydro-Québec conserve une session environ **24 heures**. Pendant ce délai, les redémarrages de Home Assistant ne demandent ni mot de passe ni code. Passé ce délai, une nouvelle connexion avec code de vérification est obligatoire : l'intégration repasse en **Réauthentification requise** et il faut saisir un nouveau code. Prévoyez donc une réauthentification environ une fois par jour.
 
 
 ### Configuration du calendrier (Obligatoire pour DPC/DCPC)
@@ -443,7 +443,7 @@ Vous souhaitez contribuer ? Consultez [CONTRIBUTING.md](CONTRIBUTING.md) pour :
 ## Projets connexes
 
 - **hydroqc2mqtt** : [https://gitlab.com/hydroqc/hydroqc2mqtt] Démon MQTT (prédécesseur de cette intégration)
-- **Hydro-Quebec-API-Wrapper** : [Bibliothèque Python](https://github.com/hydroqc/Hydro-Quebec-API-Wrapper) sous-jacente
+- **Hydro-Quebec-API-Wrapper** : [Bibliothèque Python](https://github.com/hydroqc/Hydro-Quebec-API-Wrapper) sous-jacente (une copie **vendored** modifiée est fournie avec l'intégration, voir [`custom_components/hydroqc/vendor/README.md`](custom_components/hydroqc/vendor/README.md))
 
 ---
 

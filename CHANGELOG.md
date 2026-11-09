@@ -4,11 +4,15 @@
 
 ### Modifié
 
+- **Connexion dans le style de l'application mobile (client Azure AD B2C mobile)** : l'intégration s'authentifie désormais avec le client de l'application mobile d'Hydro-Québec (`b2c_1a_prd_signup_signin_mobile`, périmètre `offline_access`) au lieu du client web du portail. Un seul code de vérification par courriel est demandé à la première connexion; ensuite le jeton de rafraîchissement dure environ **90 jours glissants** (au lieu de ~24 h avec code quotidien). Les appels de données privées passent par la branche `/wsapi/mobile/` de l'API Hydro-Québec. Validé en conditions réelles le 8 novembre 2026 sur un compte réel (relations, sommaires, infoCompte, contrats, consommation mensuelle/quotidienne/horaire, CSV historique, rafraîchissement sans code). Chaque installation devra se réauthentifier une fois (un dernier code courriel).
+
 ### Corrigé
 
 - **Messages de fin en français** : la fin d'une réauthentification ou d'une reconfiguration affiche maintenant « Réauthentification réussie » ou « Reconfiguration réussie » dans la langue de Home Assistant. Home Assistant affichait son propre message, qui n'est pas traduit en français.
 
 ### Retiré
+
+- Dépendance pip `Hydro-Quebec-API-Wrapper` : la bibliothèque est fournie (**vendored**) dans `custom_components/hydroqc/vendor/`, modifiée pour le client mobile. Les dépendances pip restantes sont `python-dateutil`, `pytz`, `aiocache` et `pkce`.
 
 ---
 

@@ -2,6 +2,16 @@
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
+# The wrapper (hydroqc) is vendored in ./vendor so this integration can ship
+# its own authentication profile: resolve imports of `hydroqc` to that copy.
+# Must run before any `import hydroqc` in this package or its friends.
+_VENDOR_DIR = Path(__file__).resolve().parent / "vendor"
+if str(_VENDOR_DIR) not in sys.path:
+    sys.path.insert(0, str(_VENDOR_DIR))
+
 import datetime
 import logging
 from typing import TYPE_CHECKING, Any
